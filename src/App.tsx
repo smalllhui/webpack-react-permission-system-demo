@@ -1,23 +1,40 @@
-import React, { Fragment } from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
-import StoreTest from '@/pages/StoreTest'
-import I18nTest from '@/pages/I18nTest'
-/**
- * @Description:App页面
- */
+import React, { useState, useEffect } from 'react'
+import type { ThemeConfig } from 'antd'
+import { ConfigProvider } from 'antd'
+import { routers } from '@/router'
+import { useAppSelector } from '@/store'
+
+import dayjs from 'dayjs'
+import zhCN from 'antd/locale/zh_CN'
+import 'dayjs/locale/zh-cn'
+
+import ErrorBoundary from '@/components/ErrorBoundary'
+import RenderRoute from '@/auth/Route/RenderRoute'
+
+dayjs.locale('zh-cn')
+
+// 主题色配置
+const config: ThemeConfig = {
+  token: {
+    // colorPrimary: "#00b96b",
+  },
+}
+
 const App: React.FC = () => {
+  const loginUserStore = useAppSelector(store => store.loginUser)
+  const [routerList, setRouterList] = useState(routers)
+  useEffect(() => {
+    setRouterList(preRoutes => {
+      preRoutes[0].children = loginUserStore.routes
+      return [...preRoutes]
+    })
+  }, [loginUserStore.routes])
   return (
-    <Fragment>
-      <div>
-        <Link to="/store">去store页面</Link>
-        &nbsp; &nbsp; &nbsp; &nbsp;
-        <Link to="/i18n">去国际化语言页面</Link>
-      </div>
-      <Routes>
-        <Route path="/store" element={<StoreTest />}></Route>
-        <Route path="/i18n" element={<I18nTest />}></Route>
-      </Routes>
-    </Fragment>
+    <ConfigProvider theme={config} locale={zhCN}>
+      <ErrorBoundary>
+        <RenderRoute routes={routerList} />
+      </ErrorBoundary>
+    </ConfigProvider>
   )
 }
 

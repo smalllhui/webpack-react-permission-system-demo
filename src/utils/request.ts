@@ -125,18 +125,18 @@ service.interceptors.response.use(
 /**
  * @description: Http网络请求返回的数据类型接口
  */
-interface HttpResponse<T> {
+interface IResult<T> {
   code?: number
   data: T
   message?: string
 }
 
 interface HttpMethod {
-  get<T>(url: string, params?: unknown): Promise<HttpResponse<T>>
-  post<T>(url: string, data?: unknown): Promise<HttpResponse<T>>
-  put<T>(url: string, data?: unknown): Promise<HttpResponse<T>>
-  delete<T>(url: string, params?: unknown): Promise<HttpResponse<T>>
-  upload<T>(url: string, files: FormData): Promise<HttpResponse<T>>
+  get<T>(url: string, params?: unknown): Promise<IResult<T>>
+  post<T>(url: string, data?: unknown): Promise<IResult<T>>
+  put<T>(url: string, data?: unknown): Promise<IResult<T>>
+  delete<T>(url: string, params?: unknown): Promise<IResult<T>>
+  upload<T>(url: string, files: FormData): Promise<IResult<T>>
   download(url: string, params?: unknown): void
 }
 
