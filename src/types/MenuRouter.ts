@@ -22,7 +22,7 @@ export interface IMenuProps {
   /**
    * 菜单ID
    */
-  id: number
+  id: number | string
   /**
    * 菜单类型：1：目录 2：菜单 3：按钮
    */

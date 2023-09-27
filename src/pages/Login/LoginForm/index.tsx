@@ -6,11 +6,13 @@ import { LockOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons'
 // store
 import { useAppDispatch, useAppSelector } from '@/store'
 import { saveUserInfo, saveUserMenus, saveUserRoutes } from '@/store/modules/LoginUserSlice'
-import { saveDefaultMenuSelectedKey, saveBreadcrumbList } from '@/store/modules/LoginUserSlice'
+import { saveDefaultMenuSelectedKey, saveDefaultOpenMenuKeys, saveBreadcrumbList } from '@/store/modules/LoginUserSlice'
 
 // router
 import type { RouteRecordRaw } from '@/router'
 import { transformRouter } from '@/router/RouterHelp'
+
+import { getDefaultMenuSelectedKeys, getDefaultMenuOpenKeys } from '@/utils/leftMenu'
 
 // 网络请求
 import { userLoginByAccount, userLoginByPhone, queryUserMenuListByToken } from './login-test-api'
@@ -147,7 +149,13 @@ const LoginForm: React.FC = () => {
       // 设置改菜单高亮
       dispatch(
         saveDefaultMenuSelectedKey({
-          defaultMenuSelectedKeys: [String(menuList[0].id)],
+          defaultMenuSelectedKeys: getDefaultMenuSelectedKeys(menuList),
+        }),
+      )
+      // 设置展开目录
+      dispatch(
+        saveDefaultOpenMenuKeys({
+          defaultMenuOpenKeys: getDefaultMenuOpenKeys(menuList),
         }),
       )
       // 设置面包屑路径

@@ -1,7 +1,7 @@
 /**
  * 模拟Api
  */
-
+import { nanoid } from 'nanoid'
 import { RUser } from '@/types/IUser'
 import { IMenuProps, MenuType } from '@/types/MenuRouter'
 import logoImg from '@/assets/images/logo.svg'
@@ -12,6 +12,8 @@ interface IResult<T> {
   message?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let currentUser: string
 /**
  * @description: 用户账号密码登录
  * @param {string} userAccount 用户账号
@@ -20,6 +22,7 @@ interface IResult<T> {
  */
 export const userLoginByAccount = (userAccount: string, password: string): Promise<IResult<RUser>> => {
   console.log(`用户账号密码登录:userAccount:${userAccount}--password:${password}`)
+  currentUser = userAccount
   return new Promise<IResult<RUser>>(resolve => {
     const loginUser = {
       token: 'token_xxxxxx',
@@ -67,39 +70,17 @@ export const userLoginByPhone = (phoneNumber: string, captcha: string): Promise<
  * @return {*}
  */
 export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
-  console.log('根据token查询权限菜单列表')
+  console.log('根据token查询权限菜单列表', currentUser)
   return new Promise<IResult<IMenuProps[]>>(resolve => {
     const menuList: IMenuProps[] = [
       {
-        id: 1,
-        menuName: '按钮权限',
-        icon: 'icon-shouye',
-        path: '/home',
-        type: MenuType.menu,
-        componentPath: 'pages/Home',
-        children: [
-          {
-            id: 4,
-            type: MenuType.button,
-            menuName: '添加按钮',
-            authCode: 'add',
-          },
-          {
-            id: 5,
-            type: MenuType.button,
-            menuName: '编辑按钮',
-            authCode: 'edit',
-          },
-        ],
-      },
-      {
-        id: 2,
+        id: nanoid(),
         menuName: '个人页',
         icon: 'icon-gerenxinxi',
         type: MenuType.directory,
         children: [
           {
-            id: 3,
+            id: nanoid(),
             menuName: '个人中心',
             icon: 'icon-gerenzhongxin',
             path: '/person/center',
@@ -107,7 +88,7 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
             componentPath: 'pages/Person/Center',
           },
           {
-            id: 4,
+            id: nanoid(),
             menuName: '个人设置',
             icon: 'icon-gerenshezhi',
             path: '/person/setting',
@@ -117,13 +98,35 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
         ],
       },
       {
-        id: 5,
+        id: nanoid(),
+        menuName: '按钮权限',
+        icon: 'icon-shouye',
+        path: '/home',
+        type: MenuType.menu,
+        componentPath: 'pages/Home',
+        children: [
+          {
+            id: nanoid(),
+            type: MenuType.button,
+            menuName: '添加按钮',
+            authCode: 'add',
+          },
+          {
+            id: nanoid(),
+            type: MenuType.button,
+            menuName: '编辑按钮',
+            authCode: 'edit',
+          },
+        ],
+      },
+      {
+        id: nanoid(),
         menuName: '异常页',
         icon: 'icon-yichangguanli',
         type: MenuType.directory,
         children: [
           {
-            id: 6,
+            id: nanoid(),
             menuName: '403',
             icon: 'icon-a-403',
             path: '/exception/403',
@@ -131,7 +134,7 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
             componentPath: 'pages/Exception/NoPermission',
           },
           {
-            id: 7,
+            id: nanoid(),
             menuName: '404',
             icon: 'icon-icon-test1',
             path: '/exception/404',
@@ -139,7 +142,7 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
             componentPath: 'pages/Exception/NotFound',
           },
           {
-            id: 8,
+            id: nanoid(),
             menuName: '500',
             icon: 'icon-icon-test2',
             path: '/exception/500',
@@ -149,13 +152,13 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
         ],
       },
       {
-        id: 9,
+        id: nanoid(),
         menuName: 'ChatGPT',
         icon: 'icon-shouye',
         type: MenuType.directory,
         children: [
           {
-            id: 10,
+            id: nanoid(),
             menuName: '简单版GPT',
             icon: 'icon-shouye',
             path: '/chatgpt/simple',
@@ -163,12 +166,36 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
             componentPath: 'pages/ChatGPT/SimpleVersion',
           },
           {
-            id: 11,
+            id: nanoid(),
             menuName: '升级版GPT',
             icon: 'icon-shouye',
             path: '/chatgpt/plus',
             type: MenuType.menu,
             componentPath: 'pages/ChatGPT/PlusVersion',
+          },
+        ],
+      },
+      {
+        id: nanoid(),
+        menuName: '编辑器',
+        icon: 'icon-shouye',
+        type: MenuType.directory,
+        children: [
+          {
+            id: nanoid(),
+            menuName: 'ReactQuill',
+            icon: 'icon-shouye',
+            path: '/editor/richtexteditor',
+            type: MenuType.menu,
+            componentPath: 'pages/Editor/RichTextEditor',
+          },
+          {
+            id: nanoid(),
+            menuName: 'MarkDown',
+            icon: 'icon-shouye',
+            path: '/editor/markdown',
+            type: MenuType.menu,
+            componentPath: 'pages/Editor/MarkDown',
           },
         ],
       },
