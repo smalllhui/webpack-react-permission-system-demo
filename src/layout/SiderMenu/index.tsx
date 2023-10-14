@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { MenuProps } from 'antd'
 import { Menu, Layout } from 'antd'
@@ -13,6 +13,9 @@ import SysLogo from '@/components/Logo'
 
 const { Sider } = Layout
 
+/**
+ * 接收属性
+ */
 interface IProps {
   /**
    * 收缩状态
@@ -46,7 +49,7 @@ interface IProps {
   onMenuClick: (keyPath: string[], selectedKey: string) => void
 }
 
-const LOGO_HEIGHT = 64
+const LOGO_HEIGHT = 64 // logo的高度
 
 /**
  * 加工生成菜单格式数据
@@ -78,6 +81,20 @@ const getMenuList = (menus: IMenuProps[]): MenuProps['items'] => {
  * description:左侧菜单组件
  */
 const SiderMenu: React.FC<IProps> = props => {
+  const [openKeys, setOpenKeys] = useState<string[] | undefined>([]) // 展开的key数组
+  useEffect(() => {
+    if (props.collapsed) {
+      setOpenKeys(undefined) // 左侧菜单折起
+    } else {
+      setOpenKeys(props.defaultOpenKeys)
+    }
+  }, [props.defaultOpenKeys, props.collapsed])
+
+  // SubMenu 展开/关闭的回调
+  const handleOpenChange = (openKeys: string[]) => {
+    setOpenKeys(openKeys)
+  }
+
   return (
     <Sider trigger={null} collapsible collapsed={props.collapsed}>
       <SysLogo
@@ -90,10 +107,11 @@ const SiderMenu: React.FC<IProps> = props => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={props.defaultSelectedKeys}
-          defaultOpenKeys={props.collapsed ? [] : props.defaultOpenKeys}
+          openKeys={openKeys}
+          selectedKeys={props.defaultSelectedKeys}
           items={getMenuList(props.menuList)}
           onClick={e => props.onMenuClick(e.keyPath, e.key)}
+          onOpenChange={handleOpenChange}
         />
       </Scrollbars>
     </Sider>

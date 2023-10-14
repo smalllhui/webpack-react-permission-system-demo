@@ -61,7 +61,7 @@ export const routers: RouteRecordRaw[] = [
     meta: {
       title: '',
     },
-    children: [],
+    children: [], // 子路由列表
   },
   {
     path: '/login',

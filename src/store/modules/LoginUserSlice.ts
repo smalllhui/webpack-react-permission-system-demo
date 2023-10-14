@@ -26,21 +26,9 @@ export interface IUserState {
    */
   collapsed: boolean
   /**
-   *  默认展开的菜单key数组
-   */
-  defaultMenuOpenKeys: string[]
-  /**
-   * 默认菜单选中的key数组
-   */
-  defaultMenuSelectedKeys: string[]
-  /**
    * 用户权限路由
    */
   routes: RouteRecordRaw[]
-  /**
-   * 面包屑数组
-   */
-  breadcrumbList: string[]
 }
 
 const initialState: IUserState = {
@@ -51,9 +39,6 @@ const initialState: IUserState = {
     userName: '',
   },
   collapsed: false,
-  defaultMenuOpenKeys: [],
-  defaultMenuSelectedKeys: [],
-  breadcrumbList: [],
   menus: [],
   routes: [],
 }
@@ -79,7 +64,6 @@ const LoginUserSlice = createSlice({
       state.userInfo = action.payload.userInfo
       state.token = action.payload.token
     },
-
     /**
      * 保存用户权限菜单列表
      */
@@ -98,24 +82,6 @@ const LoginUserSlice = createSlice({
     toggleCollapsed: (state: Draft<IUserState>) => {
       state.collapsed = !state.collapsed
     },
-
-    /**
-     * 保存默认展开的菜单key数组
-     * @param state
-     */
-    saveDefaultOpenMenuKeys: (state: Draft<IUserState>, action: PayloadAction<{ defaultMenuOpenKeys: string[] }>) => {
-      state.defaultMenuOpenKeys = action.payload.defaultMenuOpenKeys
-    },
-    /**
-     * 保存默认选中的菜单key数组
-     * @param state
-     */
-    saveDefaultMenuSelectedKey: (
-      state: Draft<IUserState>,
-      action: PayloadAction<{ defaultMenuSelectedKeys: string[] }>,
-    ) => {
-      state.defaultMenuSelectedKeys = action.payload.defaultMenuSelectedKeys
-    },
     /**
      * 保存用户路由列表
      */
@@ -127,34 +93,17 @@ const LoginUserSlice = createSlice({
     ) => {
       state.routes = action.payload.routes
     },
-
     /**
      * 用户退出登录
      */
     userLogout: (state: Draft<IUserState>) => {
       Object.assign(state, initialState)
     },
-    /**
-     * 保存面包屑路由路径
-     * @param state
-     */
-    saveBreadcrumbList: (state: Draft<IUserState>, action: PayloadAction<{ breadcrumbList: string[] }>) => {
-      state.breadcrumbList = action.payload.breadcrumbList
-    },
   },
 })
 
 // 导出方法
-export const {
-  userLogout,
-  saveUserInfo,
-  saveUserMenus,
-  saveUserRoutes,
-  toggleCollapsed,
-  saveDefaultOpenMenuKeys,
-  saveDefaultMenuSelectedKey,
-  saveBreadcrumbList,
-} = LoginUserSlice.actions
+export const { userLogout, saveUserInfo, saveUserMenus, saveUserRoutes, toggleCollapsed } = LoginUserSlice.actions
 
 // 默认导出
 export default LoginUserSlice.reducer

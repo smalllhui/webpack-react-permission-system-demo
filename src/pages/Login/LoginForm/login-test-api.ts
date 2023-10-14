@@ -154,7 +154,7 @@ export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
       {
         id: nanoid(),
         menuName: 'ChatGPT',
-        icon: 'icon-shouye',
+        icon: 'icon-GPT-icon',
         type: MenuType.directory,
         children: [
           {

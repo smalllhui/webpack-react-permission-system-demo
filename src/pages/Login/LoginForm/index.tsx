@@ -6,12 +6,15 @@ import { LockOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons'
 // store
 import { useAppDispatch, useAppSelector } from '@/store'
 import { saveUserInfo, saveUserMenus, saveUserRoutes } from '@/store/modules/LoginUserSlice'
-import { saveDefaultMenuSelectedKey, saveDefaultOpenMenuKeys, saveBreadcrumbList } from '@/store/modules/LoginUserSlice'
+import { addTag } from '@/store/modules/TagSlice'
+// type
+import type { TagType, ITagHelp } from '@/types/ITag'
 
 // router
 import type { RouteRecordRaw } from '@/router'
 import { transformRouter } from '@/router/RouterHelp'
 
+// 工具类
 import { getDefaultMenuSelectedKeys, getDefaultMenuOpenKeys } from '@/utils/leftMenu'
 
 // 网络请求
@@ -146,21 +149,26 @@ const LoginForm: React.FC = () => {
     if (routes.length > 0) {
       // 保存用户路由
       dispatch(saveUserRoutes({ routes: routes }))
-      // 设置改菜单高亮
-      dispatch(
-        saveDefaultMenuSelectedKey({
-          defaultMenuSelectedKeys: getDefaultMenuSelectedKeys(menuList),
-        }),
-      )
+      // 设置该菜单高亮
+      const defaultMenuSelectedKeys = getDefaultMenuSelectedKeys(menuList)
       // 设置展开目录
-      dispatch(
-        saveDefaultOpenMenuKeys({
-          defaultMenuOpenKeys: getDefaultMenuOpenKeys(menuList),
-        }),
-      )
+      const defaultMenuOpenKeys = getDefaultMenuOpenKeys(menuList)
       // 设置面包屑路径
       const breadcrumbList: string[] = routes[0].meta.paths || []
-      dispatch(saveBreadcrumbList({ breadcrumbList }))
+
+      // 添加当前路由进tag Store
+      const activePath = routes[0].path // 当前路由的path
+      const tagObj: TagType = {
+        path: activePath,
+        name: breadcrumbList[breadcrumbList.length - 1],
+      }
+      const tagHelpObj: ITagHelp = {
+        activePath,
+        defaultMenuOpenKeys,
+        defaultMenuSelectedKeys,
+        breadcrumbList,
+      }
+      dispatch(addTag({ tagObj, tagHelpObj }))
 
       // 3、路由跳转 默认跳转第一个
       navigate(routes[0].path)
