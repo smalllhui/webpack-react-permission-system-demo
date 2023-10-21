@@ -103,7 +103,6 @@ const SysLayout: React.FC = () => {
 
   // todo 用户退出登录事件
   const handleUserLogout = () => {
-    console.log('用户退出登录事件')
     dispatch(userLogout())
   }
 
@@ -170,6 +169,13 @@ const SysLayout: React.FC = () => {
           defaultOpenKeys={tagStore.defaultMenuOpenKeys}
           defaultSelectedKeys={tagStore.defaultMenuSelectedKeys}
           onMenuClick={onMenuClick}
+          darkItemBg={systemStore.darkItemBg}
+          darkSubMenuItemBg={systemStore.darkSubMenuItemBg}
+          darkItemColor={systemStore.darkItemColor}
+          darkItemHoverBg={systemStore.darkItemHoverBg}
+          darkItemSelectedBg={systemStore.darkItemSelectedBg}
+          darkItemHoverColor={systemStore.darkItemHoverColor}
+          darkItemSelectedColor={systemStore.darkItemSelectedColor}
         />
         <Layout>
           <SystemHeader

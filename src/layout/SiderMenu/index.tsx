@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { MenuProps } from 'antd'
-import { Menu, Layout } from 'antd'
+import { Menu, Layout, ConfigProvider } from 'antd'
 import { Scrollbars } from 'react-custom-scrollbars'
 
 // 自定义类型
@@ -29,6 +29,34 @@ interface IProps {
    * 系统logo
    */
   logoImgSrc: string
+  /**
+   * 暗色模式下的菜单项背景
+   */
+  darkItemBg: string
+  /**
+   * 暗色模式下的子菜单项背景
+   */
+  darkSubMenuItemBg: string
+  /**
+   * 暗色模式下的菜单项文字颜色
+   */
+  darkItemColor: string
+  /**
+   * 暗色模式下的菜单项悬浮背景
+   */
+  darkItemHoverBg: string //
+  /**
+   * 暗色模式下的菜单项选中背景
+   */
+  darkItemSelectedBg: string
+  /**
+   * 暗色模式下的菜单项悬浮字体颜色
+   */
+  darkItemHoverColor: string
+  /**
+   * 暗色模式下的菜单项选中颜色
+   */
+  darkItemSelectedColor: string
   /**
    * 导航菜单
    */
@@ -96,25 +124,44 @@ const SiderMenu: React.FC<IProps> = props => {
   }
 
   return (
-    <Sider trigger={null} collapsible collapsed={props.collapsed}>
-      <SysLogo
-        logoImgSrc={props.logoImgSrc}
-        systemName={props.systemName}
-        height={LOGO_HEIGHT}
-        collapsed={props.collapsed}
-      />
-      <Scrollbars style={{ height: `calc(100vh - ${LOGO_HEIGHT}px)` }}>
-        <Menu
-          theme="dark"
-          mode="inline"
-          openKeys={openKeys}
-          selectedKeys={props.defaultSelectedKeys}
-          items={getMenuList(props.menuList)}
-          onClick={e => props.onMenuClick(e.keyPath, e.key)}
-          onOpenChange={handleOpenChange}
+    <ConfigProvider
+      theme={{
+        components: {
+          Menu: {
+            darkItemBg: props.darkItemBg, // 暗色模式下的菜单项背景
+            darkSubMenuItemBg: props.darkSubMenuItemBg, // 	暗色模式下的子菜单项背景
+            darkItemColor: props.darkItemColor, // 暗色模式下的菜单项文字颜色
+            darkItemHoverBg: props.darkItemHoverBg, // 暗色模式下的菜单项悬浮背景
+            darkItemSelectedBg: props.darkItemSelectedBg, // 暗色模式下的菜单项选中背景
+            darkItemHoverColor: props.darkItemHoverColor, // 暗色模式下的菜单项悬浮字体颜色
+            darkItemSelectedColor: props.darkItemSelectedColor, // 暗色模式下的菜单项选中颜色
+            itemBorderRadius: 0, // 菜单项的圆角
+            itemMarginInline: 0, //菜单项横向外间距
+          },
+        },
+      }}
+    >
+      <Sider trigger={null} collapsible collapsed={props.collapsed} style={{ backgroundColor: props.darkItemBg }}>
+        <SysLogo
+          logoImgSrc={props.logoImgSrc}
+          systemName={props.systemName}
+          height={LOGO_HEIGHT}
+          collapsed={props.collapsed}
+          textColor={props.darkItemColor} // 文字颜色
         />
-      </Scrollbars>
-    </Sider>
+        <Scrollbars style={{ height: `calc(100vh - ${LOGO_HEIGHT}px)` }}>
+          <Menu
+            theme="dark"
+            mode="inline"
+            openKeys={openKeys}
+            selectedKeys={props.defaultSelectedKeys}
+            items={getMenuList(props.menuList)}
+            onClick={e => props.onMenuClick(e.keyPath, e.key)}
+            onOpenChange={handleOpenChange}
+          />
+        </Scrollbars>
+      </Sider>
+    </ConfigProvider>
   )
 }
 

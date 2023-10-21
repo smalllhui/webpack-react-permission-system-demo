@@ -23,6 +23,10 @@ interface IProps {
    * 系统名称
    */
   systemName: string
+  /**
+   * 字体颜色
+   */
+  textColor: string
 }
 
 const Logo: React.FC<IProps> = props => {
@@ -44,7 +48,7 @@ const Logo: React.FC<IProps> = props => {
         <Title
           level={5}
           style={{
-            color: '#fff',
+            color: props.textColor,
             paddingLeft: '6px',
             boxSizing: 'border-box',
             height: props.height + 'px',
