@@ -1,46 +1,239 @@
-# Getting Started with Create React App
+# webpack+react后台系统模版
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目允许
 
-## Available Scripts
+### 前端运行
 
-In the project directory, you can run:
+```
+git clone git@github.com:smalllhui/webpack-react-permission-system-demo.git
+cd webpack-react-permission-system-demo
+yarn
+yarn start
+```
 
-### `yarn start`
+## 页面显示
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 登录页面
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+![login.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9a822ed653b94f5dbd6f0bcc3a9875e8~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1904&h=853&s=45459&e=png&b=ffffff)
 
-### `yarn test`
+### 系统后台页面
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![main.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/54e41e82d9d24ee2b9c1c36b033de267~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1920&h=862&s=48756&e=png&b=ffffff)
 
-### `yarn build`
+## 模拟api
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```tsx
+// pages\Login\LoginForm\login-test-api.ts
+/**
+ * 模拟Api
+ */
+import { nanoid } from 'nanoid'
+import { RUser } from '@/types/IUser'
+import { IMenuProps, MenuType } from '@/types/MenuRouter'
+import logoImg from '@/assets/images/logo.svg'
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+interface IResult<T> {
+  code: number
+  data: T
+  message?: string
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let currentUser: string
+/**
+ * @description: 用户账号密码登录
+ * @param {string} userAccount 用户账号
+ * @param {string} password 密码
+ * @return {Promise<RUser>}
+ */
+export const userLoginByAccount = (userAccount: string, password: string): Promise<IResult<RUser>> => {
+  console.log(`用户账号密码登录:userAccount:${userAccount}--password:${password}`)
+  currentUser = userAccount
+  return new Promise<IResult<RUser>>(resolve => {
+    const loginUser = {
+      token: 'token_xxxxxx',
+      userInfo: {
+        userAvatar: logoImg,
+        userName: 'PanZonghui',
+      },
+    }
+    setTimeout(() => {
+      resolve({
+        code: 200,
+        data: loginUser,
+      })
+    }, 200)
+  })
+}
 
-### `yarn eject`
+/**
+ * @description:用户手机号验证码登录
+ * @param {string} phoneNumber 手机号
+ * @param {string} captcha 验证码
+ * @return {Promise<RUser>}
+ */
+export const userLoginByPhone = (phoneNumber: string, captcha: string): Promise<IResult<RUser>> => {
+  console.log(`用户手机号验证码登录:phoneNumber:${phoneNumber}--captcha:${captcha}`)
+  return new Promise<IResult<RUser>>(resolve => {
+    const loginUser = {
+      token: 'token_yyyy',
+      userInfo: {
+        userAvatar: logoImg,
+        userName: 'PanZonghui',
+      },
+    }
+    setTimeout(() => {
+      resolve({
+        code: 200,
+        data: loginUser,
+      })
+    }, 2000)
+  })
+}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+/**
+ * @description: 根据token查询权限菜单列表
+ * @return {*}
+ */
+export const queryUserMenuListByToken = (): Promise<IResult<IMenuProps[]>> => {
+  console.log('根据token查询权限菜单列表', currentUser)
+  return new Promise<IResult<IMenuProps[]>>(resolve => {
+    const menuList: IMenuProps[] = [
+      {
+        id: nanoid(),
+        menuName: '个人页',
+        icon: 'icon-gerenxinxi',
+        type: MenuType.directory,
+        children: [
+          {
+            id: nanoid(),
+            menuName: '个人中心',
+            icon: 'icon-gerenzhongxin',
+            path: '/person/center',
+            type: MenuType.menu,
+            componentPath: 'pages/Person/Center',
+          },
+          {
+            id: nanoid(),
+            menuName: '个人设置',
+            icon: 'icon-gerenshezhi',
+            path: '/person/setting',
+            type: MenuType.menu,
+            componentPath: 'pages/Person/Setting',
+          },
+        ],
+      },
+      {
+        id: nanoid(),
+        menuName: '按钮权限',
+        icon: 'icon-shouye',
+        path: '/home',
+        type: MenuType.menu,
+        componentPath: 'pages/Home',
+        children: [
+          {
+            id: nanoid(),
+            type: MenuType.button,
+            menuName: '添加按钮',
+            authCode: 'add',
+          },
+          {
+            id: nanoid(),
+            type: MenuType.button,
+            menuName: '编辑按钮',
+            authCode: 'edit',
+          },
+        ],
+      },
+      {
+        id: nanoid(),
+        menuName: '异常页',
+        icon: 'icon-yichangguanli',
+        type: MenuType.directory,
+        children: [
+          {
+            id: nanoid(),
+            menuName: '403',
+            icon: 'icon-a-403',
+            path: '/exception/403',
+            type: MenuType.menu,
+            componentPath: 'pages/Exception/NoPermission',
+          },
+          {
+            id: nanoid(),
+            menuName: '404',
+            icon: 'icon-icon-test1',
+            path: '/exception/404',
+            type: MenuType.menu,
+            componentPath: 'pages/Exception/NotFound',
+          },
+          {
+            id: nanoid(),
+            menuName: '500',
+            icon: 'icon-icon-test2',
+            path: '/exception/500',
+            type: MenuType.menu,
+            componentPath: 'pages/Exception/ServerError',
+          },
+        ],
+      },
+      {
+        id: nanoid(),
+        menuName: 'ChatGPT',
+        icon: 'icon-GPT-icon',
+        type: MenuType.directory,
+        children: [
+          {
+            id: nanoid(),
+            menuName: '简单版GPT',
+            icon: 'icon-shouye',
+            path: '/chatgpt/simple',
+            type: MenuType.menu,
+            componentPath: 'pages/ChatGPT/SimpleVersion',
+          },
+          {
+            id: nanoid(),
+            menuName: '升级版GPT',
+            icon: 'icon-shouye',
+            path: '/chatgpt/plus',
+            type: MenuType.menu,
+            componentPath: 'pages/ChatGPT/PlusVersion',
+          },
+        ],
+      },
+      {
+        id: nanoid(),
+        menuName: '编辑器',
+        icon: 'icon-shouye',
+        type: MenuType.directory,
+        children: [
+          {
+            id: nanoid(),
+            menuName: 'ReactQuill',
+            icon: 'icon-shouye',
+            path: '/editor/richtexteditor',
+            type: MenuType.menu,
+            componentPath: 'pages/Editor/RichTextEditor',
+          },
+          {
+            id: nanoid(),
+            menuName: 'MarkDown',
+            icon: 'icon-shouye',
+            path: '/editor/markdown',
+            type: MenuType.menu,
+            componentPath: 'pages/Editor/MarkDown',
+          },
+        ],
+      },
+    ]
+    setTimeout(() => {
+      resolve({
+        code: 200,
+        data: menuList,
+      })
+    }, 200)
+  })
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
