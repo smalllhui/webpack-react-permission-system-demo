@@ -126,7 +126,7 @@ const LoginForm: React.FC = () => {
       if (activeTabKey === 'account') {
         res = await userLoginByAccount(formData.userAccount, formData.password)
       } else {
-        res = await userLoginByPhone(formData.userAccount, formData.password)
+        res = await userLoginByPhone(formData.phoneNumber, formData.captcha)
       }
       dispatch(saveUserInfo({ userInfo: res.data.userInfo, token: res.data.token }))
     } catch (error: any) {
